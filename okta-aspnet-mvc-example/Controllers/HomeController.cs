@@ -22,8 +22,17 @@ namespace okta_aspnet_mvc_example.Controllers
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
-
             return View();
+        }
+
+        static int pong = 1;
+        public JsonResult Ping()
+        {
+            return new JsonResult()
+            {
+                Data = new Ping { Pong = pong++ },
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
         }
 
 
@@ -41,5 +50,11 @@ namespace okta_aspnet_mvc_example.Controllers
             System.Diagnostics.Debug.WriteLine("Expiration: " + identity.FindFirst(JwtClaimTypes.Expiration));
             return View(HttpContext.GetOwinContext().Authentication.User.Claims);
         }
+    }
+
+    public class Ping
+    {
+        public int Pong { get; set; }
+
     }
 }

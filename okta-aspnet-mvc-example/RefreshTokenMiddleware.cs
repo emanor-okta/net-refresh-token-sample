@@ -73,8 +73,10 @@ public class RefreshTokenMiddleware : OwinMiddleware
 
             var idToken = new StrictTokenHandler().ReadToken(idTokenString);
             System.Diagnostics.Debug.WriteLine("IdToken About to Expire: " + (idToken.ValidTo <= DateTime.UtcNow.Add(TimeSpan.FromMinutes(3))));
-            // Need to Add logic to update once the expiry time falls in a certain window, for now just always update
-            return idToken.ValidTo <= DateTime.UtcNow.Add(TimeSpan.FromMinutes(3));
+            // Add logic when to update.
+            // This will update once the expiry time has 15 or less.
+            // ** If a request does not come in the final 15 minutes of the token lifetime the session will end **
+            return idToken.ValidTo <= DateTime.UtcNow.Add(TimeSpan.FromMinutes(15));
         }
 
         //return false;

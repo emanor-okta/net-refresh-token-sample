@@ -58,4 +58,30 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>
+
+<!-- Add simple logic to send a heartbeat every 10 minutes to refresh a session  -->
+<script type="text/javascript">
+    var refreshInterval = 60000 * 10;
+    Ping();
+    function Ping() {
+        setTimeout(() => {
+            if (refreshInterval > 0) {
+                //window.location.reload();
+                fetch(window.location.origin + '/Home/Ping', { cache: "no-cache" })
+                    .then(resp => {
+                        if (resp.ok) {
+                            resp.json()
+                                .then(j => {
+                                    console.log(j);
+                                    Ping();
+                                })
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            }
+        }, refreshInterval);
+    }
+</script>
 </html>
