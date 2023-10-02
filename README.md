@@ -2,6 +2,15 @@
 
 This example shows you how to use the `Okta.AspNet` library to log in a user. The user's browser is first redirected to the Okta-hosted login page. After the user authenticates, they are redirected back to your application. ASP.NET MVC automatically populates `HttpContext.User` with the information Okta sends back about the user.
 
+## Token Refresh Logic Added - (Extend user ASP.NET session)
+
+This builds on the Okta sample by adding token refresh abilities using the solution provided at [refresh_token.md](https://github.com/okta/okta-aspnet/blob/master/docs/refresh-token.md).
+Notable changes:
+* [RefreshTokenMiddleware.cs](https://github.com/emanor-okta/net-refresh-token-sample/blob/main/okta-aspnet-mvc-example/RefreshTokenMiddleware.cs)
+* Adding middleware in [Startup.cs](https://github.com/emanor-okta/net-refresh-token-sample/blob/main/okta-aspnet-mvc-example/Startup.cs#L20)
+
+By default Okta mints id_tokens with a 60 minute expiry time. This is the value ASP.NET uses to create a users session. In order for ASP.NET to refresh a users tokens, a users needs to be actively accessing the application and a decision of when to refresh tokens needs to be implemented. In this sample a refresh is done in the [last 15 minutes of session lifetime](https://github.com/emanor-okta/net-refresh-token-sample/blob/main/okta-aspnet-mvc-example/RefreshTokenMiddleware.cs#L79). This can be modified as needed.
+There is also [non-production ready sample](https://github.com/emanor-okta/net-refresh-token-sample/blob/main/okta-aspnet-mvc-example/Views/Shared/_Layout.cshtml#L63) to show how JS could actively send a heartbeat to the application to keep a session active if it is desired to allow long idle times by users.
 
 ## Prerequisites
 
